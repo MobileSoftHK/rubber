@@ -8,8 +8,7 @@ import 'package:rubber/src/spring_description/stiffness.dart';
 
 export 'package:flutter/scheduler.dart' show TickerFuture, TickerCanceled;
 
-final SpringDescription _kFlingSpringDefaultDescription =
-    SpringDescription.withDampingRatio(
+final SpringDescription _kFlingSpringDefaultDescription = SpringDescription.withDampingRatio(
   mass: 1,
   stiffness: Stiffness.LOW,
   ratio: DampingRatio.LOW_BOUNCY,
@@ -45,8 +44,7 @@ class AnimationControllerValue {
 /// NOTE: the [top] padding value is interpeted as a distance from the top.
 /// If you want to specify a range, use the `.fromPercentageRange` constructor
 class AnimationPadding {
-  static AnimationControllerValue get _zero =>
-      AnimationControllerValue(percentage: 0);
+  static AnimationControllerValue get _zero => AnimationControllerValue(percentage: 0);
 
   AnimationControllerValue? top;
   AnimationControllerValue bottom;
@@ -68,13 +66,11 @@ class AnimationPadding {
   /// Contain the animation within the enclosing widget (default)
   ///
   /// Same as `AnimationPadding.fromPercentages(bottom: 0, top: 0)`
-  factory AnimationPadding.contain() =>
-      AnimationPadding.fromPercentages(top: 0, bottom: 0);
+  factory AnimationPadding.contain() => AnimationPadding.fromPercentages(top: 0, bottom: 0);
 
   /// No padding. Allows the bottom sheet to be flung off the top of the screen,
   /// but not the bottom (old default behavior).
-  factory AnimationPadding.bottomOnly() =>
-      AnimationPadding(top: null, bottom: _zero);
+  factory AnimationPadding.bottomOnly() => AnimationPadding(top: null, bottom: _zero);
 
   /// Pad with percent-distances from the bottom of the viewport
   AnimationPadding.fromPercentageRange(double bottom, double top)
@@ -83,8 +79,7 @@ class AnimationPadding {
 
   AnimationPadding.fromPixels({double? top, double? bottom})
       : top = top == null ? null : AnimationControllerValue(pixel: top),
-        bottom =
-            bottom == null ? _zero : AnimationControllerValue(pixel: bottom);
+        bottom = bottom == null ? _zero : AnimationControllerValue(pixel: bottom);
 
   /// Apply the padding to a controller value
   double apply(double value) {
@@ -102,11 +97,7 @@ class AnimationPadding {
   }
 }
 
-class RubberAnimationController extends Animation<double>
-    with
-        AnimationEagerListenerMixin,
-        AnimationLocalListenersMixin,
-        AnimationLocalStatusListenersMixin {
+class RubberAnimationController extends Animation<double> with AnimationEagerListenerMixin, AnimationLocalListenersMixin, AnimationLocalStatusListenersMixin {
   /// Creates an animation controller.
   ///
   /// * [value] is the initial value of the animation. If defaults to the lower
@@ -147,12 +138,9 @@ class RubberAnimationController extends Animation<double>
     AnimationPadding? padding,
     SpringDescription? springDescription,
     required TickerProvider vsync,
-  })   : assert(!dismissable || (dismissable && halfBoundValue == null),
-            "dismissable sheets are imcompatible with halfBoundValue"),
-        lowerBoundValue = lowerBoundValue ??
-            AnimationControllerValue(percentage: dismissable ? 0.0 : 0.1),
-        upperBoundValue =
-            upperBoundValue ?? AnimationControllerValue(percentage: 0.9),
+  })  : assert(!dismissable || (dismissable && halfBoundValue == null), "dismissable sheets are imcompatible with halfBoundValue"),
+        lowerBoundValue = lowerBoundValue ?? AnimationControllerValue(percentage: dismissable ? 0.0 : 0.1),
+        upperBoundValue = upperBoundValue ?? AnimationControllerValue(percentage: 0.9),
         _padding = padding ?? AnimationPadding.contain() {
     if (springDescription != null) _springDescription = springDescription;
 
@@ -225,8 +213,7 @@ class RubberAnimationController extends Animation<double>
 
   Simulation? _simulation;
 
-  ValueNotifier<AnimationState> animationState =
-      ValueNotifier(AnimationState.collapsed);
+  ValueNotifier<AnimationState> animationState = ValueNotifier(AnimationState.collapsed);
 
   /// Initial value of the controller in percentage
   double? initialValue;
@@ -301,8 +288,7 @@ class RubberAnimationController extends Animation<double>
   /// change is zero.
   double get velocity {
     if (!isAnimating) return 0.0;
-    return _simulation!.dx(lastElapsedDuration!.inMicroseconds.toDouble() /
-        Duration.microsecondsPerSecond);
+    return _simulation!.dx(lastElapsedDuration!.inMicroseconds.toDouble() / Duration.microsecondsPerSecond);
   }
 
   void _internalSetValue(double newValue) {
@@ -341,12 +327,10 @@ class RubberAnimationController extends Animation<double>
     return animateTo(from: from, to: lowerBound!);
   }
 
-  TickerFuture animateTo(
-      {double? from, required double to, Curve curve = Curves.easeOut}) {
+  TickerFuture animateTo({double? from, required double to, Curve curve = Curves.easeOut}) {
     assert(() {
       if (duration == null) {
-        throw FlutterError(
-            'AnimationController.collapse() called with no default Duration.\n'
+        throw FlutterError('AnimationController.collapse() called with no default Duration.\n'
             'The "duration" property should be set, either in the constructor or later, before '
             'calling the collapse() function.');
       }
@@ -365,8 +349,7 @@ class RubberAnimationController extends Animation<double>
     var roundValue = double.parse(value.toStringAsFixed(2));
     var roundLowerBound = double.parse(lowerBound!.toStringAsFixed(2));
     var roundHalfBound = 0.0;
-    if (halfBound != null)
-      roundHalfBound = double.parse(halfBound!.toStringAsFixed(2));
+    if (halfBound != null) roundHalfBound = double.parse(halfBound!.toStringAsFixed(2));
     var roundUppperBound = double.parse(upperBound!.toStringAsFixed(2));
 
     if (roundValue == roundLowerBound) {
@@ -380,12 +363,10 @@ class RubberAnimationController extends Animation<double>
     }
   }
 
-  TickerFuture _animateToInternal(double target,
-      {Curve curve = Curves.easeOut, AnimationBehavior? animationBehavior}) {
-    final AnimationBehavior behavior =
-        animationBehavior ?? this.animationBehavior;
+  TickerFuture _animateToInternal(double target, {Curve curve = Curves.easeOut, AnimationBehavior? animationBehavior}) {
+    final AnimationBehavior behavior = animationBehavior ?? this.animationBehavior;
     double scale = 1.0;
-    if (SemanticsBinding.instance!.disableAnimations) {
+    if (SemanticsBinding.instance.disableAnimations) {
       switch (behavior) {
         case AnimationBehavior.normal:
           scale = 0.05;
@@ -398,8 +379,7 @@ class RubberAnimationController extends Animation<double>
     if (simulationDuration == null) {
       assert(() {
         if (this.duration == null) {
-          throw FlutterError(
-              'AnimationController.animateTo() called with no explicit Duration and no default Duration.\n'
+          throw FlutterError('AnimationController.animateTo() called with no explicit Duration and no default Duration.\n'
               'Either the "duration" argument to the animateTo() method should be provided, or the '
               '"duration" property should be set, either in the constructor or later, before '
               'calling the animateTo() function.');
@@ -407,8 +387,7 @@ class RubberAnimationController extends Animation<double>
         return true;
       }());
       final double range = upperBound! - lowerBound!;
-      final double remainingFraction =
-          range.isFinite ? (target - _value).abs() / range : 1.0;
+      final double remainingFraction = range.isFinite ? (target - _value).abs() / range : 1.0;
       simulationDuration = this.duration! * remainingFraction;
     } else if (target == value) {
       // Already at target, don't animate.
@@ -426,8 +405,7 @@ class RubberAnimationController extends Animation<double>
     }
     assert(simulationDuration > Duration.zero);
     assert(!isAnimating);
-    return _startSimulation(_InterpolationSimulation(
-        _value, target, simulationDuration, curve, scale));
+    return _startSimulation(_InterpolationSimulation(_value, target, simulationDuration, curve, scale));
   }
 
   double? getBoundFromState(AnimationState state) {
@@ -443,19 +421,15 @@ class RubberAnimationController extends Animation<double>
     }
   }
 
-  TickerFuture fling(double? from, double? to,
-      {double velocity = 1.0, AnimationBehavior? animationBehavior}) {
+  TickerFuture fling(double? from, double? to, {double velocity = 1.0, AnimationBehavior? animationBehavior}) {
     final double? target = velocity < 0.0 ? from : to;
-    return launchTo(value, target,
-        velocity: velocity, animationBehavior: animationBehavior);
+    return launchTo(value, target, velocity: velocity, animationBehavior: animationBehavior);
   }
 
-  TickerFuture launchTo(double from, double? to,
-      {double velocity = 1.0, AnimationBehavior? animationBehavior}) {
+  TickerFuture launchTo(double from, double? to, {double velocity = 1.0, AnimationBehavior? animationBehavior}) {
     double scale = 1.0;
-    final AnimationBehavior behavior =
-        animationBehavior ?? this.animationBehavior;
-    if (SemanticsBinding.instance!.disableAnimations) {
+    final AnimationBehavior behavior = animationBehavior ?? this.animationBehavior;
+    if (SemanticsBinding.instance.disableAnimations) {
       switch (behavior) {
         case AnimationBehavior.normal:
           scale = 200.0;
@@ -465,9 +439,7 @@ class RubberAnimationController extends Animation<double>
       }
     }
 
-    final Simulation simulation =
-        SpringSimulation(_springDescription, from, to!, velocity * scale)
-          ..tolerance = _kFlingTolerance;
+    final Simulation simulation = SpringSimulation(_springDescription, from, to!, velocity * scale)..tolerance = _kFlingTolerance;
     return animateWith(simulation);
   }
 
@@ -506,8 +478,7 @@ class RubberAnimationController extends Animation<double>
   void dispose() {
     assert(() {
       if (_ticker == null) {
-        throw FlutterError(
-            'AnimationController.dispose() called more than once.\n'
+        throw FlutterError('AnimationController.dispose() called more than once.\n'
             'A given $runtimeType cannot be disposed more than once.\n'
             'The following $runtimeType object was disposed multiple times:\n'
             '  $this');
@@ -521,12 +492,10 @@ class RubberAnimationController extends Animation<double>
 
   void _tick(Duration elapsed) {
     _lastElapsedDuration = elapsed;
-    final double elapsedInSeconds =
-        elapsed.inMicroseconds.toDouble() / Duration.microsecondsPerSecond;
+    final double elapsedInSeconds = elapsed.inMicroseconds.toDouble() / Duration.microsecondsPerSecond;
     assert(elapsedInSeconds >= 0.0);
     _value = _simulation!.x(elapsedInSeconds);
-    if (_simulation!.isDone(elapsedInSeconds) ||
-        (dismissable && _value < lowerBound! && elapsedInSeconds > 0)) {
+    if (_simulation!.isDone(elapsedInSeconds) || (dismissable && _value < lowerBound! && elapsedInSeconds > 0)) {
       if (_value < lowerBound! && dismissable) _value = lowerBound!;
 
       _status = AnimationStatus.completed;
@@ -540,21 +509,17 @@ class RubberAnimationController extends Animation<double>
   @override
   String toStringDetails() {
     final String paused = isAnimating ? '' : '; paused';
-    final String ticker =
-        _ticker == null ? '; DISPOSED' : (_ticker!.muted ? '; silenced' : '');
+    final String ticker = _ticker == null ? '; DISPOSED' : (_ticker!.muted ? '; silenced' : '');
     final String label = debugLabel == null ? '' : '; for $debugLabel';
-    final String more =
-        '${super.toStringDetails()} ${value.toStringAsFixed(3)}';
+    final String more = '${super.toStringDetails()} ${value.toStringAsFixed(3)}';
     return '$more$paused$ticker$label';
   }
 }
 
 class _InterpolationSimulation extends Simulation {
-  _InterpolationSimulation(
-      this._begin, this._end, Duration duration, this._curve, double scale)
+  _InterpolationSimulation(this._begin, this._end, Duration duration, this._curve, double scale)
       : assert(duration.inMicroseconds > 0),
-        _durationInSeconds =
-            (duration.inMicroseconds * scale) / Duration.microsecondsPerSecond;
+        _durationInSeconds = (duration.inMicroseconds * scale) / Duration.microsecondsPerSecond;
 
   final double _durationInSeconds;
   final double _begin;
@@ -570,8 +535,7 @@ class _InterpolationSimulation extends Simulation {
   @override
   double dx(double timeInSeconds) {
     final double epsilon = tolerance.time;
-    return (x(timeInSeconds + epsilon) - x(timeInSeconds - epsilon)) /
-        (2 * epsilon);
+    return (x(timeInSeconds + epsilon) - x(timeInSeconds - epsilon)) / (2 * epsilon);
   }
 
   @override

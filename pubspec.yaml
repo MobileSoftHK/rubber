@@ -4,12 +4,12 @@ version: 1.0.1
 homepage: https://github.com/mcrovero/rubber
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: ">=2.17.1 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  after_layout: ^1.0.7
+  after_layout: 1.2.0
   
 dev_dependencies:
   flutter_test:
